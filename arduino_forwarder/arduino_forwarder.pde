@@ -3,7 +3,7 @@ import processing.serial.*;
 
 // define the spacebrew server location, app name and description
 String server = "sandbox.spacebrew.cc";
-String name = "give me a SHORT NAME PLEASE!";
+String name = "Cup_me";
 String description = "This is an example client which publishes the value of a analog sensor from an Arduino ";
 
 Spacebrew sb;     // Spacebrew connection object
@@ -25,7 +25,7 @@ void setup() {
   sb = new Spacebrew( this );
   
   // add each thing you publish to
-  sb.addPublish( "graph_me", "graphable", json.toString() ); 
+  sb.addPublish( "cup_me", "range", json.toString() ); 
 
   // connect to spacebrew
   sb.connect(server, name, description );
@@ -54,7 +54,7 @@ void serialEvent (Serial myPort) {
 
     // publish the value to spacebrew if app is connected to spacebrew
     if (sb.connected()) {
-      sb.send( "graph_me", json.toString() );
+      sb.send( "cup_me", json.toString() );
     }
   }
 }
