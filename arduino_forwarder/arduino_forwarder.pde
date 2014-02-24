@@ -1,31 +1,27 @@
-import spacebrew.*;
-import processing.serial.*;
+//Original code by SPACEBREW CREW: Julio Terra & Brett Renfer
+
+import spacebrew.*; // Download the Spacebrew Processinglibrary and install ( https://github.com/Spacebrew/spacebrewP5 ) - communication between Processing and Spacebrew 
+import processing.serial.*; // Add this library is for serial communication between Arduino and Processing
 
 // define the spacebrew server location, app name and description
 String server = "sandbox.spacebrew.cc";
-String name = "Cup_me";
-String description = "This is an example client which publishes the value of a analog sensor from an Arduino ";
+String name = "coaster";
+String description = "Force Senstive Resistor";
 
 Spacebrew sb;     // Spacebrew connection object
 Serial myPort;    // Serial port object 
 
-JSONObject json;  // JSON object that will hold data sent to spacebrew
 int value = 0;    // holds temp value of the arduino data
 
 
 void setup() {
   size(400, 200);
 
-  // initialize json object with name and value attributes 
-  json = new JSONObject();
-  json.setString("name", name);
-  json.setInt("value", value);
-
   // instantiate the spacebrew object
   sb = new Spacebrew( this );
   
   // add each thing you publish to
-  sb.addPublish( "cup_me", "range", json.toString() ); 
+  sb.addPublish( "coaster", "range", value ); 
 
   // connect to spacebrew
   sb.connect(server, name, description );
@@ -44,17 +40,15 @@ void serialEvent (Serial myPort) {
   String inString = myPort.readStringUntil('\n');
 
   if (inString != null) {
-    // trim off whitespace
+    // trim off whitespace // Get the data from Arduino and clean it up
     inString = trim(inString);
-    println("Received data from Arduino: " + inString);
-
-    // convert value from string to an integer and add to json
-    value = int(inString); 
-    json.setInt("value", value);
+    
+    value = int(inString); // cleaned value returned from Arduino
+    println("Received data from Arduino: " + value);
 
     // publish the value to spacebrew if app is connected to spacebrew
     if (sb.connected()) {
-      sb.send( "cup_me", json.toString() );
+      sb.send( "coaster", value );
     }
   }
 }

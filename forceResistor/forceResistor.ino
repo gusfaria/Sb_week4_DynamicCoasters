@@ -1,5 +1,4 @@
-boolean bCupIsOver = false;
-
+int glassWeight = 50; // this is how much the glass weight.
 void setup() {
 	// open serial port
 	Serial.begin(9600);
@@ -8,28 +7,15 @@ void setup() {
 void loop() {
 	// read and send the value of analog sensor
         long raw_val = analogRead(A0);
+        
 
-        int range_offet = 3;
-        int range_size = 60; 
-  //        raw_val = raw_val - range_offet;
-  //      raw_val = constrain( (raw_val * 1023 / range_size), 0, 1023);
-        
-        if(raw_val>50){
-          bCupIsOver = true;
-        } else {
-          bCupIsOver = false;
-        }
-         
-        if(bCupIsOver == true){
-            Serial.println(raw_val);
-            if(raw_val < 400){
-               Serial.println("cup is over and need refill!");
-            } else {
-               Serial.println("cup is over!");  
-            }
-        }
-        
-	// wait to send the next value so that you
-	// don't clog up the serial port
-	delay(100);
+        //is their a cup is over the coaster?
+        if(raw_val > glassWeight) {
+          // yes, the cup is over the coaster so send data.
+          Serial.println(raw_val);  
+      } 
+      // else, leave the last value catched. 
+      // Because we don't need to know everytime you take a sip, we need to know if the bottle is empty.
+	
+       delay(100);
 }
